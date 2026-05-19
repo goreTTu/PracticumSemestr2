@@ -224,6 +224,12 @@ body {
     cursor: pointer;
 }
 
+
+.error_field_auth_reg{
+    color:orange;
+    font-size: 16px;
+}
+
 /* view model page*/
 .main_container_text_file_name {
     font-size: 16px;
@@ -265,11 +271,112 @@ body {
     display: none;
 }
 
+.main_container_model_procces_text{
+    color: white;
+    margin: 20px auto;
+    text-align: center;
+
+}
+
+.main_container_div_model_result{
+    max-width: 700px;
+    max-height: 700px;
+    margin: 0px auto;
+}
+
+#main_container_mdl_res_image{
+    max-width: 700px;
+    max-height: 700px;
+    margin: 20px auto;
+    object-fit: contain;
+}
+
+
+/* profile styles*/
+
+.profile_name_user {
+    font-size: 24px;
+    color: white;
+    margin: 30px auto;
+    display: block;
+    text-align: center;
+}
+
+.profile_clear_history {
+    margin: 20px auto;
+    max-width: 100px;
+    text-align: center;
+}
+
+.profile_history_title {
+    font-size: 18px;
+    color: white;
+    margin: 30px auto;
+    text-align: center;
+}
+
+.history_view_title_img_and_text {
+    font-size: 18px;
+    color: white;
+    margin: 30px auto;
+    text-align: center;
+}
+
+
+.history_history_list {
+    max-height: 300px;
+    overflow-y: auto;
+
+}
+
+.history_list_item_block {
+    display: flex;
+    justify-content: space-around;
+    background-color: rgba(84, 125, 43, 0.32);
+    color: white;
+    font-size: 14px;
+    padding: 12px;
+    border: 2px solid black;
+    border-radius: 30px;
+}
+
+.history_list_full_information {
+    font-size: 16px;
+    color: white;
+    border: 2px solid white;
+    background-color: rgba(0, 0, 0, 0);
+    border-radius: 30px;
+    display: block;
+    padding: 8px;
+/*     text-decoration: none; */
+}
+
+.history_list_full_information:hover {
+    color: black;
+    border: 2px solid black;
+    background-color: rgba(255, 255, 255);
+    cursor: pointer;
+}
+
+.history_text_output
+{
+    color: white;
+    text-align: center;
+}
+
+.history_view_item{
+    text-align: center;
+}
+#history_view_item_image{
+    max-width: 400px;
+    max-height: 400px;
+    object-fit: contain;
+    margin: 20px auto;
+
+}
 /* All class styles*/
 
-.hide {
-    display: none;
-}
+
 
 .std_btn {
     font-size: 16px;
@@ -288,4 +395,7 @@ body {
     background-color: rgba(255, 255, 255);
 }
 
+.hide {
+    display: none;
+}
 

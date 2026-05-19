@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <title>List of models</title>
+</head>
+<body>
+    <div class="header_container">
+        <div class="header_logo"><a href="/" class="header_logo_link">TeamWheatProject</a></div>
+        <div class="header_menu">
+            <div class="header_menu_item"><a href="/view_models" class="header_menu_item_link">Show models</a></div>
+            <div class="header_menu_item auth_no"><a href="/auth_page" class="header_menu_item_link">Sign in</a></div>
+            <div class="header_menu_item auth_no"><a href="/reg_page" class="header_menu_item_link">Sign up</a></div>
+             <div class="header_menu_item auth_accept"><a href="/profile" class="header_menu_item_link">Profile</a></div>
+            <div class="header_menu_item auth_accept"><a href="/logout" class="header_menu_item_link">Exit</a></div>
+        </div>
+    </div>
+
+    <div class="main_container">
+        <div class="main_container_title find_of_models_page_tag">Choose model</div>
+        <div class="main_container_models_box">
+            <div class="main_container_models_box_item hide">
+                <div class="main_container_models_box_item_block_info">
+                    <div class="main_container_models_box_item_title">Model for detection of wheat</div>
+                    <div class="main_container_models_box_item_description">Description of model</div>
+                </div>
+                <a href="#" class="main_container_models_box_item_button">go to the page of model</a>
+            </div>
+
+        </div>
+    </div>
+    
+    <div class="footer_container">
+        <div class="footer_link"><a href="https://github.com/goreTTu/PracticumSemestr2" class="footer_link_item">Github of project</a></div>
+    </div>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
+

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <title>TeamWheatProject</title>  
+</head>
+<body>
+    <div class="header_container">
+        <div class="header_logo"><a href="/" class="header_logo_link">TeamWheatProject</a></div>
+        <div class="header_menu hide">
+            <div class="header_menu_item"><a href="/view_models" class="header_menu_item_link">Show models</a></div>
+            <div class="header_menu_item auth_no"><a href="/auth_page" class="header_menu_item_link">Sign in</a></div>
+            <div class="header_menu_item auth_no"><a href="/reg_page" class="header_menu_item_link">Sign up</a></div>
+             <div class="header_menu_item auth_accept"><a href="/profile" class="header_menu_item_link">Profile</a></div>
+            <div class="header_menu_item auth_accept"><a href="/logout" class="header_menu_item_link">Exit</a></div>
+        </div>
+    </div>
+
+    <div class="main_container">
+        <div class="main_container_title">Error page</div>
+    </div>
+    
+    <div class="footer_container">
+        <div class="footer_link"><a href="https://github.com/goreTTu/PracticumSemestr2" class="footer_link_item">Github of project</a></div>
+    </div>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
+
