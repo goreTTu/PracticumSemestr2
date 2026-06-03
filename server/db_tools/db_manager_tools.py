@@ -145,7 +145,7 @@ class DBManager:
     def get_all_history_items_by_user_id(self, user_id):
         db = self.connect_to_db()
         cursor = db.cursor()
-        cursor.execute('SELECT hid, outermodelid, outeruserid FROM historyitems WHERE outeruserid = ?', (user_id,))
+        cursor.execute('SELECT hid, outermodelid, outeruserid, textout FROM historyitems WHERE outeruserid = ?', (user_id,))
         results = cursor.fetchall()
         db.commit()
         db.close()
@@ -171,7 +171,7 @@ class DBManager:
 
         id_list = []
         for item in all_items:
-            tmp_s = item[0]['hid']
+            tmp_s = item[0]
             id_list.append((tmp_s,))
 
         db = self.connect_to_db()

@@ -1,10 +1,11 @@
 from flask import Flask, render_template, jsonify, request, make_response, redirect, send_file
 from db_tools.db_manager_tools import DBManager
-from model_api.model_api_manager import get_other_file_by_self
+from model_api.model_api_manager import get_other_file_by_self, ModelWrapper
 import json
 from io import BytesIO
+import os.path
 
-
+model_global = ModelWrapper()
 app = Flask(__name__, template_folder='templates', static_folder='static')
 
 
@@ -92,19 +93,22 @@ def get_info_by_self_handler():
 
 @app.route('/run_model', methods=['POST'])
 def run_model_handler():
+    full_name_file = request.args.get('full_name_file')
+    full_name_file = full_name_file[13:]
+    name_file, ext_file = os.path.splitext(full_name_file)
     name_user_cookies = request.cookies.get('user')
     name_model_cookies = request.cookies.get('model')
     my_db = DBManager()
     answer={"server_response":"error_model_execute"}
 
     file_img = request.files.get('imagedata')
-    new_img = get_other_file_by_self(file_img)
+    new_img = get_other_file_by_self(file_img, model_global, ext_file, ".png")
     new_path = new_img[1]
     new_img = new_img[0]
     if new_img:
         cookies_user = request.cookies.get('user')
         cookies_model = request.cookies.get('model')
-        meta_data = 'meta_data'
+        meta_data = full_name_file
         result = my_db.insert_history_item(cookies_user, cookies_model, new_path, meta_data)
         if not result:
             answer["server_response"]="bad_sql"
@@ -162,11 +166,23 @@ def get_all_history_handler():
         model_id = item['outermodelid']
         mdl_tmp = my_db.get_model_by_id(model_id)
         mdl_tmp = mdl_tmp[0]
-        answer[str(counter_mdl)] = {'name': mdl_tmp['modeltitle'], 'id': item['hid']}
+        answer[str(counter_mdl)] = {'name': mdl_tmp['modeltitle'], 'id': item['hid'], 'meta_info': item['textout']}
         counter_mdl += 1
 
     return jsonify(answer)
 
+
+@app.route('/delete_all_history_items', methods=['GET'])
+def delete_all_history_handler():
+    answer={}
+    answer["server_response"]="no_clear"
+    name_user_cookies = request.cookies.get('user')
+    my_db = DBManager()
+    mdl_tmp = my_db.delete_history_items_all_by_user_name(name_user_cookies)
+    if mdl_tmp:
+        answer["server_response"]="yes_clear"
+    return jsonify(answer)
+        
 
 @app.route('/auth_page', methods=['GET'])
 def get_auth_page():

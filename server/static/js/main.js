@@ -422,9 +422,9 @@ function get_extension_str(file_name_to_ext)
     }
 }
 
-function send_img_file_data(frm_data){
+function send_img_file_data(frm_data, send_url_args_file){
 
-    return fetch('http://127.0.0.1:5000/run_model', {
+    return fetch(('http://127.0.0.1:5000/run_model?'+send_url_args_file), {
         method: 'POST',
         body: frm_data,
     })
@@ -497,6 +497,10 @@ function create_history_items(json_data, lng)
         title_div.classList.add("history_list_name_model_record");
         title_div.textContent = item.name;
 
+        const meta_title_div = document.createElement("div");
+        meta_title_div.classList.add("history_text_output");
+        meta_title_div.textContent = item.meta_info;
+
         const div_get_model = document.createElement("a");
         div_get_model.classList.add("history_list_full_information");
         div_get_model.textContent = "information";
@@ -504,9 +508,14 @@ function create_history_items(json_data, lng)
 
         div_get_model.addEventListener('click', function (event) {
             send_out_history_req(lk);
+            const model_out_image = document.getElementById('history_view_item_image');
+            model_out_image.classList.remove('hide');
+            const model_out_title = document.querySelectorAll('.history_view_title_img_and_text')[0];
+            model_out_title.classList.remove('hide');
         });
 
         div_item.appendChild(title_div);
+        div_item.appendChild(meta_title_div);
         div_item.appendChild(div_get_model);
 
         document.querySelector('.history_history_list').appendChild(div_item);
@@ -532,6 +541,24 @@ function send_out_history_req(req_addrr){
     .catch(error => {console.error('Error with execute request', error); });
 }
 
+function show_html_history_items(){
+    const history_out_title = document.querySelectorAll('.profile_history_title')[0];
+    history_out_title.textContent = "History:";
+}
+
+function set_empty_value_history_title(){
+    const history_out_title = document.querySelectorAll('.profile_history_title')[0];
+    history_out_title.textContent = "History is empty";
+}
+
+function init_history_items_page(){
+    const model_out_title = document.querySelectorAll('.history_view_title_img_and_text')[0];
+    model_out_title.classList.add('hide');
+
+    const model_out_image = document.getElementById('history_view_item_image');
+    model_out_image.classList.add('hide');
+}
+
 function get_all_histories(){
     return fetch('http://127.0.0.1:5000/get_all_history')
     .then(response => {
@@ -541,13 +568,51 @@ function get_all_histories(){
         return response.json();
     })
     .then(data => {
+        init_history_items_page();
         const leng_data = Object.keys(data).length;
-        create_history_items(data, leng_data);
+        if(leng_data > 0){
+            const parentElement = document.querySelectorAll('.history_history_list')[0];
+            parentElement.innerHTML = "";
+            create_history_items(data, leng_data);
+            show_html_history_items();
+        }else{
+            set_empty_value_history_title();
+        }
 
     })
     .catch(error => {console.error('Error with execute request', error); });
 }
 
+function clear_html_history_items(){
+    const parentElement = document.querySelectorAll('.history_history_list')[0];
+    parentElement.innerHTML = "";
+
+    const model_out_title = document.querySelectorAll('.history_view_title_img_and_text')[0];
+    model_out_title.classList.add('hide');
+
+    const model_out_image = document.getElementById('history_view_item_image');
+    model_out_image.classList.add('hide');
+
+    const history_out_title = document.querySelectorAll('.profile_history_title')[0];
+    history_out_title.textContent = "History cleared";
+}
+
+function delete_all_history_items(){
+    return fetch('http://127.0.0.1:5000/delete_all_history_items')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Http error');
+        }
+        const resp_data_ans = response.json();
+        return resp_data_ans;
+    })
+    .then(data => {
+        if (data.server_response === "yes_clear"){
+            clear_html_history_items();
+        }
+    })
+    .catch(error => {console.error('Error with execute request', error); });
+}
 
 function builder_handlers()
 {
@@ -604,16 +669,27 @@ function builder_handlers()
             const formData = new FormData();
             formData.append('imagedata', imageData, file_name);
             set_value_proccess_model_run("Model begin work");
-            send_img_file_data(formData);
+            const local_arg_filename = get_file_name_from_loading();
+            const args_send_filename = "full_name_file=" + local_arg_filename;
+            send_img_file_data(formData, args_send_filename);
 
         });
-        // console.log(get_file_name_from_loading());
 
     }
     else if(is_profile_page){
         console.log('is_profile_page');
         get_info_name_by_self();
         get_all_histories();
+
+        const button_show_hist = document.querySelectorAll('.profile_show_history')[0];
+        button_show_hist.addEventListener('click', () => {
+            get_all_histories();
+        });
+
+        const button_obj = help_is_profile_page[0];
+        button_obj.addEventListener('click', () => {
+            delete_all_history_items();
+        });
     }
 }
 

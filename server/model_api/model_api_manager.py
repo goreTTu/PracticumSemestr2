@@ -1,26 +1,43 @@
 from PIL import Image, ImageFilter
 from io import BytesIO
+from ultralytics import YOLO
+
+class ModelWrapper:
+    def __init__(self):
+        pth_const = "model_api/best.pt"
+        self.path_to_model = pth_const
+        self.model_worker = YOLO(pth_const)
+
+    def reload_model(self):
+        self.model_worker = YOLO(self.path_to_model)
+
+    def get_answer_model_by_image(self, img_path):
+        results_model = self.model_worker(img_path)
+        return results_model
 
 
-def get_other_file_by_self(input_file, inp_name="resized_example.png", out_name="out_img.png"):
+def get_other_file_by_self(input_file, model_tmp, inp_ext, out_ext, inp_name="resized_example", out_name="out_img"):
     img = input_file.read()
 
     image = Image.open(BytesIO(img))
-    #resized_image = image.resize((300, 200))
-    resized_image = image.rotate(180)#test
-    inp_file_name = 'model_dir/input_img/' + inp_name
+    input_file.close()
+    resized_image = image.resize((416, 416))
+    image.close()
+    inp_file_name = 'model_dir/input_img/' + inp_name + inp_ext
     with open(inp_file_name, 'wb') as f:
         resized_image.save(f, format='png')
+    
+    out_file_name = 'model_dir/output_img/' + out_name + out_ext
 
-
+    res_mod = model_tmp.get_answer_model_by_image(inp_file_name)
+    arr_img_mod = res_mod[0].orig_img
+    img_res_mod = Image.fromarray(arr_img_mod[...,::-1])
+    img_res_mod.save(out_file_name)
 
     binary_data = None
-    #out_file_name = 'model_dir/output_img/' + out_name#work variant
-    out_file_name = inp_file_name#test
     with Image.open(out_file_name) as image_new:
         buffer_cont = BytesIO()
         image_new.save(buffer_cont, format='png')
         binary_data = buffer_cont.getvalue()
-    #return (binary_data, out_file_name)
     return (BytesIO(binary_data), out_file_name)
 
