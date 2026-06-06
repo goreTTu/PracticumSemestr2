@@ -340,7 +340,7 @@ body {
 
 .history_list_item_block {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     background-color: rgba(84, 125, 43, 0.32);
     color: white;
     font-size: 14px;

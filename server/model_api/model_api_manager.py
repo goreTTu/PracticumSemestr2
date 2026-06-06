@@ -1,10 +1,12 @@
 from PIL import Image, ImageFilter
 from io import BytesIO
 from ultralytics import YOLO
+import numpy as np
+import cv2
 
 class ModelWrapper:
     def __init__(self):
-        pth_const = "model_api/best.pt"
+        pth_const = "model_api/last.pt"
         self.path_to_model = pth_const
         self.model_worker = YOLO(pth_const)
 
@@ -30,9 +32,17 @@ def get_other_file_by_self(input_file, model_tmp, inp_ext, out_ext, inp_name="re
     out_file_name = 'model_dir/output_img/' + out_name + out_ext
 
     res_mod = model_tmp.get_answer_model_by_image(inp_file_name)
-    arr_img_mod = res_mod[0].orig_img
-    img_res_mod = Image.fromarray(arr_img_mod[...,::-1])
-    img_res_mod.save(out_file_name)
+    res_mod = res_mod[0]
+    results = res_mod
+
+    arr_img_mod = results.orig_img
+    boxes = results.boxes.xyxy.cpu().numpy().astype(np.int32)
+    for box in boxes:
+        color = (255, 0, 0)
+        x1, y1, x2, y2 = box
+        cv2.rectangle(arr_img_mod, (x1, y1), (x2, y2), color, 2)
+
+    cv2.imwrite(out_file_name, arr_img_mod)
 
     binary_data = None
     with Image.open(out_file_name) as image_new:
